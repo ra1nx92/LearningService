@@ -12,5 +12,9 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
+        binding.btnStartService.setOnClickListener{
+            startService(MyService.newIntent(this))
+            //чтобы запустить сервис ему нужно передать интент в качестве параметра
+        }
     }
 }
