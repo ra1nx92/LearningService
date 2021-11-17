@@ -38,5 +38,8 @@ class MainActivity : AppCompatActivity() {
             stopService(MyService.newIntent(this)) //остановка сервиса вручную
             Toast.makeText(this,"STOP SERVICE",LENGTH_LONG).show()
         }
+        binding.btnIntentService.setOnClickListener {
+            ContextCompat.startForegroundService(this,MyIntentService.newIntent(this))
+        }
     }
 }
