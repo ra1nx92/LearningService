@@ -9,13 +9,14 @@ import android.content.Intent
 import android.os.Build
 import android.os.IBinder
 import android.util.Log
+import android.widget.Toast
 import androidx.core.app.NotificationCompat
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
-class ForegroundService() : Service() {
+class ForegroundService : Service() {
 
     private val scope = CoroutineScope(Dispatchers.Main)
 //ForegroundService в отличии от обычного Service продолжает свою работу даже когда приложение полностью закрыто
@@ -34,10 +35,11 @@ class ForegroundService() : Service() {
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         log("onStartCommand")
         scope.launch {
-            for (i in 0 until 100) {
+            for (i in 1 until 10) {
                 delay(1000)
                 log("Timer $i")
             }
+            stopSelf() //по окончанию работы сервис остановится, и уведомление исчезнет
         }
         return START_STICKY
     }
@@ -45,6 +47,7 @@ class ForegroundService() : Service() {
     override fun onDestroy() {
         super.onDestroy()
         log("onDestroy")
+        Toast.makeText(this,"STOP SERVICE",Toast.LENGTH_SHORT).show()
     }
 
     override fun onBind(p0: Intent?): IBinder? {
