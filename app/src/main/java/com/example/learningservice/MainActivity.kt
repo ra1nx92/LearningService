@@ -1,25 +1,22 @@
 package com.example.learningservice
 
-import android.app.Notification
-import android.app.NotificationChannel
-import android.app.NotificationManager
 import android.app.job.JobInfo
 import android.app.job.JobScheduler
+import android.app.job.JobWorkItem
 import android.content.ComponentName
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
 import android.widget.Toast.LENGTH_LONG
-import androidx.core.app.NotificationCompat
 import androidx.core.content.ContextCompat
-import androidx.core.content.getSystemService
 import com.example.learningservice.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
     private val binding by lazy {
         ActivityMainBinding.inflate(layoutInflater)
     }
+    private var pageNum = 1 //для очереди сервисов
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -44,6 +41,8 @@ class MainActivity : AppCompatActivity() {
         binding.btnIntentService.setOnClickListener {
             ContextCompat.startForegroundService(this, MyIntentService.newIntent(this))
         }
+        //в этой ветке указан пример работы с очередью сервисов
+//-------------------------------------------------------------------------------------------------
         //для старта JobService необходимо 3 обьекта
         binding.btnJobService.setOnClickListener {
             //указываем какой именно сервис нам нужен
@@ -53,11 +52,21 @@ class MainActivity : AppCompatActivity() {
             val jobInfo = JobInfo.Builder(MyJobService.ID_JOB_SERVICE, componentName)
                 .setRequiresCharging(true) // сервис будет работать только если устройство заряжается
                 .setRequiredNetworkType(JobInfo.NETWORK_TYPE_UNMETERED)//будет работать только если есть подключение к Wi-Fi
-                .setPersisted(true) //если необходимо чтобы сервис стартовал после того как устройство было выключено и включено заново
+                //.setPersisted(true) //если необходимо чтобы сервис стартовал после того как устройство было выключено и включено заново
                 .build()
 
+                //для работы с очередью необходим интент
+            val intent = MyJobService.newIntent(pageNum++)
             val jobScheduler = getSystemService(JOB_SCHEDULER_SERVICE) as JobScheduler
-            jobScheduler.schedule(jobInfo)
-        }
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                jobScheduler.enqueue(jobInfo, JobWorkItem(intent))//чтобы запустить данный сервис,
+            // необходимо вызвать enqueue, куда передать JobWorkItem с интентом содержащим необходимые параметры
+            }
+//если запустить несколько сервисов методом jobScheduler.schedule(), то работать будет только последний из них, остальные работы отменятся
+            //чтобы реализовать очередь сервисов, необходимо вызвать метод jobScheduler.enqueue(),
+        // тогда каждый следующий сервис будет ждать пока предыдущий закончит свое выполнение.
+// Если система убьет сервис, то при перезапуске он продолжится с выполнения последнего запущеного сервиса который был прерван
+        }//ВСЕ ЭТО РАБОТАЕТ ТОЛЬКО С ВЕРСИИ 26
     }
 }
