@@ -11,7 +11,6 @@
         android:layout_width="wrap_content"
         android:layout_height="50dp"
         android:text="Start Service"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/btn_stop_service" />
@@ -21,7 +20,6 @@
         android:layout_width="wrap_content"
         android:layout_height="50dp"
         android:text="Foreground Service"
-        app:layout_constraintBottom_toTopOf="@+id/btn_stop_service"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/btn_intent_service" />
@@ -31,7 +29,6 @@
         android:layout_width="wrap_content"
         android:layout_height="50dp"
         android:text="stop service"
-        app:layout_constraintBottom_toTopOf="@+id/btn_start_service"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/btn_foreground_service" />
@@ -41,9 +38,19 @@
         android:layout_width="wrap_content"
         android:layout_height="50dp"
         android:text="intent service"
-        app:layout_constraintBottom_toTopOf="@+id/btn_foreground_service"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/btn_job_service"
+        android:layout_width="wrap_content"
+        android:layout_height="50dp"
+        android:layout_marginBottom="481dp"
+        android:text="Job service"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
