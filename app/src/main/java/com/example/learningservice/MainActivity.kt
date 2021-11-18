@@ -41,9 +41,6 @@ class MainActivity : AppCompatActivity() {
         binding.btnIntentService.setOnClickListener {
             ContextCompat.startForegroundService(this, MyIntentService.newIntent(this))
         }
-        //в этой ветке указан пример работы с очередью сервисов
-//-------------------------------------------------------------------------------------------------
-        //для старта JobService необходимо 3 обьекта
         binding.btnJobService.setOnClickListener {
             //указываем какой именно сервис нам нужен
             val componentName = ComponentName(this, MyJobService::class.java)
@@ -68,5 +65,8 @@ class MainActivity : AppCompatActivity() {
         // тогда каждый следующий сервис будет ждать пока предыдущий закончит свое выполнение.
 // Если система убьет сервис, то при перезапуске он продолжится с выполнения последнего запущеного сервиса который был прерван
         }//ВСЕ ЭТО РАБОТАЕТ ТОЛЬКО С ВЕРСИИ 26
+        binding.btnJobIntentService.setOnClickListener {
+            MyJobIntentService.enqueue(this,pageNum++)
+        }
     }
 }
