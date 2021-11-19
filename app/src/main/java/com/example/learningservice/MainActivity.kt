@@ -10,6 +10,8 @@ import android.os.Bundle
 import android.widget.Toast
 import android.widget.Toast.LENGTH_LONG
 import androidx.core.content.ContextCompat
+import androidx.work.ExistingWorkPolicy
+import androidx.work.WorkManager
 import com.example.learningservice.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
@@ -67,6 +69,24 @@ class MainActivity : AppCompatActivity() {
         }//ВСЕ ЭТО РАБОТАЕТ ТОЛЬКО С ВЕРСИИ 26
         binding.btnJobIntentService.setOnClickListener {
             MyJobIntentService.enqueue(this,pageNum++)
+        }
+        binding.btnWorkManager.setOnClickListener {
+            val workManager = WorkManager.getInstance(applicationContext)
+//2 параметром необходимо передать что делать если производится попытка запустить работу, которая
+// уже запущена. Их 4 варианта - APPEND\APPEND_OR_REPLACE\KEEP\REPLACE
+//REPLACE - старый воркер будет заменен на новый. KEEP - старый продолжит работу, новый игнорируется.
+//APPEND - новый воркер будет положен в очередь, если старый завершится с ошибкой, эта ошибка
+// распространится на все сервисы в очереди
+//APPEND_OR_REPLACE - новый воркер будет положен в очередь, если старый завершится с ошибкой, будет создана новая цепочка
+//--------------------------------------------------------------------------------------------------
+//3 параментром принимается OneTimeWorkRequest (если выполнение пройдет успешно, его не надо выполнять заново).
+// Он принимает все параметры, а так же ограничения на работу сервиса(зарядка, Wi-Fi и т.д).Необходимо создать фарбичный метод который будет возвращать экземпляр Request
+            workManager.enqueueUniqueWork(
+                MyWorker.NAME_WORKER,
+                ExistingWorkPolicy.APPEND,
+                MyWorker.makeRequest(pageNum++)
+
+            )
         }
     }
 }
